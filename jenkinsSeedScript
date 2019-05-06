@@ -1,0 +1,24 @@
+node{
+    stage('generate first job'){
+        jobDsl scriptText: '''
+            pipelineJob(\'1_service\') {
+                concurrentBuild(false)
+                triggers{
+                    githubPush()
+                }
+                definition{
+                    cpsScm{
+                        scm{
+                            git{
+                                remote{
+                                    github('jessmccay/service', 'ssh')
+                                    credentials('service-repo')
+                                }
+                            }
+                        }
+                        scriptPath('jenkins/Jenkinsfile')
+                    }
+                }
+            }'''
+    }
+}
